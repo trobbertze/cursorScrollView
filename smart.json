@@ -1,0 +1,11 @@
+{
+  "name": "cursorScroller",
+  "description": "Scrollview that is populated by  cursor",
+  "homepage": "",
+  "author": "Theo Robbertze <theo.robbertze@gmail.com> (http://www.strollalot.co.za)",
+  "version": "0.0.1",
+  "git": "",
+  "packages": {
+    "famono": {}
+  }
+}
