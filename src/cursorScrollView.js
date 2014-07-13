@@ -5,33 +5,51 @@ CursorScrollView = function(options) {
 	function _CursorScrollView(options) {
 		Scrollview.apply(this, arguments);
 
-		this.options = options;
+		if (options) {
+			this.options = options;
+		}
+		else {
+			this.options = {};
+		}
 
 		this.viewSequence = new ViewSequence();
 
-		// this.options.cursor.forEach(function(document, index, cursor){
-		// 	this.addItem(document);
-		// }, this);
-
 		this.sequenceFrom(this.viewSequence);
 
-		this.options.cursor.observe({
+		if (this.options.cursor) {
+				this.setContent(this.options.cursor, this.options.itemPrototype);
+		}
+
+	}
+	// ---------------------------------------------------------------------------
+	_CursorScrollView.prototype = Object.create(Scrollview.prototype);
+	_CursorScrollView.prototype.constructor = _CursorScrollView;
+	// ---------------------------------------------------------------------------
+	_CursorScrollView.prototype.setContent = function(cursor, prototype) {
+		if (this.queryHandle) {
+			this.queryHandle.stop();
+		}
+
+		this.viewSequence.splice(0, this.viewSequence._.array.length);
+
+		this.options.cursor = cursor;
+
+		this.options.itemPrototype = prototype;
+
+		this.queryHandle = cursor.observe({
 			addedAt: this.addedAt.bind(this),
 			changedAt: this.changedAt.bind(this),
 			removedAt: this.removedAt.bind(this),
 			movedTo: this.movedTo.bind(this)
 		});
-	}
-	// ---------------------------------------------------------------------------
-	_CursorScrollView.prototype = Object.create(Scrollview.prototype);
-	_CursorScrollView.prototype.constructor = _CursorScrollView;
+	};
 	// ---------------------------------------------------------------------------
 	_CursorScrollView.prototype.addItem = function(document, index) {
 		var item = new this.options.itemPrototype({
 			document: document
 		});
 
-		//listItem.on("click", this.onClick.bind(this, listItem.value));
+		item.on("click", this.onItemClick.bind(this, item));
 		item.pipe(this);
 
 		this.viewSequence.push(item);
@@ -52,5 +70,10 @@ CursorScrollView = function(options) {
 	_CursorScrollView.prototype.movedTo = function(document, fromIndex, toIndex, before){
 
 	};
+	// ---------------------------------------------------------------------------
+	_CursorScrollView.prototype.onItemClick = function(item) {
+		this._eventOutput.emit('clickItem', item.document);
+	};
+	// ---------------------------------------------------------------------------
 	return new _CursorScrollView(options);
 };
