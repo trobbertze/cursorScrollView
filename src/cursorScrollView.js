@@ -44,6 +44,10 @@ CursorScrollView = function(options) {
 		});
 	};
 	// ---------------------------------------------------------------------------
+	_CursorScrollView.prototype.each = function(callback, context) {
+		_.each(this.viewSequence._.array, callback, context);
+	};
+	// ---------------------------------------------------------------------------
 	_CursorScrollView.prototype.addItem = function(document, index) {
 		var item = new this.options.itemPrototype({
 			document: document
@@ -64,7 +68,7 @@ CursorScrollView = function(options) {
 	};
 	// ---------------------------------------------------------------------------
 	_CursorScrollView.prototype.removedAt = function(oldDocument, atIndex){
-
+		this.viewSequence.splice(atIndex, 1);
 	};
 	// ---------------------------------------------------------------------------
 	_CursorScrollView.prototype.movedTo = function(document, fromIndex, toIndex, before){
