@@ -49,7 +49,13 @@ CursorScrollView = function(options) {
 	};
 	// ---------------------------------------------------------------------------
 	_CursorScrollView.prototype.addItem = function(document, index) {
-		var item = new this.options.itemPrototype({
+		var itemPrototype = this.options.itemPrototype;
+		if (_.has(document, "type") &&
+			  _.has(itemPrototype, document.type)) {
+					itemPrototype = itemPrototype[document.type];
+		}
+
+		var item = new itemPrototype({
 			document: document
 		});
 
